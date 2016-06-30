@@ -1,9 +1,9 @@
 BEGIN TRANSACTION;
 CREATE TABLE "NotesTable" (
-	`ID`	INTEGER,
-	`Date`	TEXT,
-	`Time`	TEXT,
+	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT,
+	`DateTime`	TEXT,
 	`Note`	TEXT,
-	PRIMARY KEY(ID)
+	`IsStared`	INTEGER,
+	`Indentity`	TEXT
 );
 COMMIT;

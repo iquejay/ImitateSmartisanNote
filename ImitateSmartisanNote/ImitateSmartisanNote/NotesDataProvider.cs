@@ -51,7 +51,7 @@ namespace ImitateSmartisanNote
             
         }
 
-        public IEnumerable<NoteItemModel> LoadData()
+        public IEnumerable<NoteItemModel> LoadData(string filterstr="")
         {
             var noteItems = new List<NoteItemModel>();
 
@@ -60,18 +60,59 @@ namespace ImitateSmartisanNote
             conn.Open();
 
             SQLiteCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "select * from NotesTable"; //表
+            cmd.CommandText = "select * from NotesTable "+filterstr; //表
             cmd.CommandType = System.Data.CommandType.Text;
-            
+
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    noteItems.Add(new NoteItemModel(reader["Date"].ToString(), reader["Time"].ToString(), reader["Note"].ToString()));
+                    noteItems.Add(new NoteItemModel(DateTime.Parse(reader["DateTime"].ToString()), reader["Note"].ToString()) {
+                        IsStared = reader["IsStared"].ToString() == "1" ? true : false,
+                        Identity = reader["Indentity"].ToString()
+                    });
                 }
+
+                noteItems.Sort((a, b) => {
+                    int seconds = (b.DateAndTime - a.DateAndTime).Seconds;
+                    return seconds>0?1:seconds==0?0:-1; });
             }
 
             return noteItems;
+        }
+        public void InsertData(NoteItemModel noteItem)
+        {
+            string connectString = @"Data Source=notesData.db;Pooling=true;FailIfMissing=false";
+            SQLiteConnection conn = new SQLiteConnection(connectString);
+            conn.Open();
+
+            SQLiteCommand cmd = conn.CreateCommand();
+            cmd.CommandText = string.Format("insert into NotesTable(DateTime,Note,IsStared,Indentity) values(\"{0:s}\",\"{1:s}\",{2:d},{3:s})", noteItem.DateAndTime.ToString(),noteItem.Note,noteItem.IsStared?1:0,noteItem.Identity); //表
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.ExecuteScalar();
+        }
+        public void DeleteData(NoteItemModel noteItem)
+        {
+            string connectString = @"Data Source=notesData.db;Pooling=true;FailIfMissing=false";
+            SQLiteConnection conn = new SQLiteConnection(connectString);
+            conn.Open();
+            SQLiteCommand cmd = conn.CreateCommand();
+            cmd.CommandText = string.Format("delete from NotesTable where Indentity='{0:s}'",noteItem.Identity); //表
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.ExecuteScalar();
+        }
+        public void UpdateData(NoteItemModel noteItem,bool ContentChanged=false)
+        {
+            string connectString = @"Data Source=notesData.db;Pooling=true;FailIfMissing=false";
+            SQLiteConnection conn = new SQLiteConnection(connectString);
+            conn.Open();
+            SQLiteCommand cmd = conn.CreateCommand();
+            if(!ContentChanged)
+                cmd.CommandText = string.Format("update NotesTable set IsStared='{0:d}' where Indentity='{1:s}'", noteItem.IsStared?1:0, noteItem.Identity); //表
+            else
+                cmd.CommandText = string.Format("update NotesTable set Note='{0:s}',DateTime='{1:s}',IsStared='{2:d}' where Indentity='{3:s}'",noteItem.Note,noteItem.DateAndTime.ToString(),noteItem.IsStared?1:0, noteItem.Identity); //表
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.ExecuteScalar();
         }
     }
 }

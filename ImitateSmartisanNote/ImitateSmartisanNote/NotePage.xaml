@@ -1,0 +1,65 @@
+﻿<Page x:Class="ImitateSmartisanNote.NotePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ImitateSmartisanNote"
+      xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Height="600"
+      Title="NotePage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Margin="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Source="image\common_title_bar_bg.png" Height="38" Style="{DynamicResource ImageStyle2}" HorizontalAlignment="Center"/>
+        <Button Click="Button_Click" HorizontalAlignment="Left" Foreground="White" Padding="3" Background="Transparent" VerticalAlignment="Center" Margin="5 0">
+            <Button.Content>
+                <Grid>
+                    <TextBlock FontFamily="Segoe UI Symbol" Padding="0 0 0 3" FontSize="14" Text="&#xE012;"/>
+                    <TextBlock Margin="15 0 0 0" VerticalAlignment="Center" Text="列表"/>
+                </Grid>
+            </Button.Content>
+        </Button>
+        <Image x:Name="背景图片" Grid.Row="1" Margin="0" Source="image\note_background.png" Stretch="UniformToFill"/>
+        <Grid Grid.Row="1">
+            <Rectangle Grid.Column="0" Fill="#FFF8F3EB"/>
+            <!--<Path Grid.ColumnSpan="1" 
+                  Data="M4.0000008,0 L16,0 20,0 20,3.9999998 20,56 20,60 16,60 4.0000008,60 C1.7908613,60 2.9802322E-07,58.209141 0,56 L0,3.9999998 C2.9802322E-07,1.790861 1.7908613,0 4.0000008,0 z"
+                  Fill="#FFF8F3EB" HorizontalAlignment="Left" Grid.RowSpan="1" StrokeStartLineCap="Square" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" StrokeDashArray="1 0" Width="20"/>-->
+            <Path Grid.ColumnSpan="1" Grid.Column="0" 
+                  Data="M0,2.7114311E-11 L4.0000033,2.7114311E-11 461,2.7114311E-11 C461.27615,-1.0058009E-06 461.54575,0.027981101 461.80612,0.081263781 462.06653,0.13454847 462.31769,0.21313342 462.55698,0.31434283 462.79626,0.41554379 463.02362,0.53936976 463.23642,0.68313402 463.44925,0.82690209 463.64746,0.99060756 463.82843,1.171569 464.0094,1.3525352 464.1731,1.5507583 464.31686,1.7635584 464.46063,1.9763624 464.58444,2.2037418 464.68567,2.4430202 464.78687,2.682293 464.86545,2.9334667 464.91873,3.1938577 464.97202,3.4542499 465,3.7238567&#xA;465,3.9999962 L465,56.000003 C465,56.276141 464.97202,56.545749 464.91873,56.80614 464.86545,57.066531 464.78687,57.317706 464.68567,57.556979 464.58444,57.796256 464.46063,58.023635 464.31686,58.236438 464.1731,58.449241 464.0094,58.647464 463.82843,58.828429 463.64746,59.009391 463.44925,59.173095 463.23642,59.316863 463.02362,59.460628 462.79626,59.584453 462.55698,59.685657 462.31769,59.786864 462.06653,59.865451 461.80612,59.918735 461.54575,59.972018 461.27615,59.999999&#xA;461,59.999999 L4.0000033,59.999999 0,59.999999 0,56.000003 0,3.9999962 z" 
+                  Fill="#FFFCFAF2" Margin="20,0,0,0" Stretch="Fill" Stroke="{x:Null}" StrokeThickness="0" />
+            <ed:LineArrow Grid.ColumnSpan="1" Fill="#FFFCFAF2" Margin="19,0,0,0" Stroke="#FFF1ECE3" StrokeThickness="1" EndArrow="NoArrow" BendAmount="0" Height="Auto" VerticalAlignment="Stretch" Width="1" HorizontalAlignment="Left" Grid.RowSpan="1"/>
+            <ed:LineArrow Grid.ColumnSpan="1" Fill="#FFFCFAF2" Margin="0,25,0,0" Stroke="#FFF1ECE3" StrokeThickness="1" EndArrow="NoArrow" BendAmount="0" Height="1" VerticalAlignment="Top"/>
+            <Grid Height="Auto" Width="Auto" Margin="21,0,0,0" Grid.Column="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Margin="10 0 0 0">
+                    <TextBlock x:Name="日期提示" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.RowSpan="1" FontSize="12" VerticalAlignment="Center" Margin="0,2.34,5,2.34" Foreground="#B9A691" Text="{Binding DateTip,Mode=OneWay}"></TextBlock>
+                    <TextBlock HorizontalAlignment="Right" MouseDown="Star_MouseDown" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Margin="0 0 5 0" FontSize="16" Tag="false" Foreground="{Binding IsStared,Converter={StaticResource BoolToForegroundConverter}}" Text="&#xE113;"/>
+                </Grid>
+                <TextBox x:Name="contentTb" TextWrapping="Wrap" 
+                         Margin="5" FontSize="16"
+                         AcceptsReturn="True" BorderThickness="0"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Text="{Binding Note}" Foreground="#7A5840" Grid.Row="1" Background="Transparent" >
+                    <ContextMenuService.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="全选"/>
+                            <MenuItem Header="剪切"/>
+                            <MenuItem Header="复制"/>
+                            <MenuItem Header="粘贴"/>
+                        </ContextMenu>
+                    </ContextMenuService.ContextMenu>
+                </TextBox>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

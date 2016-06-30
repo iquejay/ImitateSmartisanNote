@@ -8,7 +8,7 @@ using System.Windows;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("ImitateSmartisanNote")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("模仿锤子便签实现的简易便签")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ImitateSmartisanNote")]

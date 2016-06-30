@@ -13,5 +13,8 @@ namespace ImitateSmartisanNote
     /// </summary>
     public partial class App : Application
     {
+        public static System.Windows.Controls.Frame MainFrame = null;
+        public static NotesDataProvider DataProvider = null;
+        public static NoteManager NoteManager = null;
     }
 }

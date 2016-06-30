@@ -10,7 +10,6 @@ namespace ImitateSmartisanNote
     public class NoteManager
     {
         private ObservableCollection<NoteItemModel> notes = new ObservableCollection<NoteItemModel>();
-
         public ObservableCollection<NoteItemModel> Notes
         {
             get

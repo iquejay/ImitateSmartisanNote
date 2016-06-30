@@ -9,23 +9,17 @@ namespace ImitateSmartisanNote
 {
     public class NoteItemModel : INotifyPropertyChanged
     {
-        public NoteItemModel(string date, string time, string note)
+        public NoteItemModel(DateTime dt, string note)
         {
-            this._date = date;
-            this._time = time;
-            this._note = note;
-
-            this.UpdateDateTip();
-            this.UpdateNoteTitle();
+            this.Note = note;
+            this.DateAndTime = dt;
         }
-
-        private string _date;
-        private string _time;
         private string _note;
-
         private string _dateTip;
         private string _noteTitle;
+        private bool _isStared;
 
+        public string Identity;
         public string DateTip
         {
             get
@@ -33,16 +27,31 @@ namespace ImitateSmartisanNote
                 return _dateTip;
             }
 
-            private set
+            set
             {
                 if (_dateTip != value)
                 {
-                    this.NotifyPropertyChanged(DateTip);
                     _dateTip = value;
+                    this.NotifyPropertyChanged(DateTip);
                 }
             }
         }
 
+        public bool IsStared
+        {
+            get {
+                return _isStared;
+            }
+           set
+            {
+                if (_isStared != value)
+                {
+                    _isStared = value;
+                    this.NotifyPropertyChanged("IsStared");
+       
+                }
+            }
+        }
         public string NoteTitle
         {
             get
@@ -50,51 +59,78 @@ namespace ImitateSmartisanNote
                 return _noteTitle;
             }
 
-            private set
+            set
             {
                 if (_noteTitle != value)
                 {
-                    this.NotifyPropertyChanged(NoteTitle);
                     _noteTitle = value;
+                    this.NotifyPropertyChanged(NoteTitle);
                 }
             }
         }
-
-        public string Date
+        private DateTime _dateTime;
+        public DateTime DateAndTime
         {
             get
             {
-                return _date;
+                return _dateTime;
             }
-
             set
             {
-                if (_date != value)
+                if (_dateTime != value)
                 {
-                    _date = value;
-                    NotifyPropertyChanged("Date");
-
+                    _dateTime = value;
                     UpdateDateTip();
+                    NotifyPropertyChanged("DateTip");
                 }
             }
         }
-
-        public string Time
+        private string Date
         {
             get
             {
-                return _time;
-            }
+                string extra ="";
 
-            set
-            {
-                if (_time != value)
+                DateTime dt = DateAndTime;//DateTime.Parse(_date);
+                
+                DateTime now = DateTime.Now;
+
+                if (now.Year == dt.Year)
                 {
-                    _time = value;
-                    NotifyPropertyChanged("Time");
-
-                    UpdateDateTip();
+                    if (now.DayOfYear - dt.DayOfYear == 1)
+                        extra = "昨天";
+                    else if (now.DayOfYear - dt.DayOfYear == 0)
+                        extra = "今天";
+                    else if (now.DayOfYear - dt.DayOfYear < 5)
+                    {
+                        extra = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(dt.DayOfWeek);
+                    }
+                    else
+                        extra = dt.Month + "月" + dt.Day + "日";
                 }
+                else
+                {
+                    extra = dt.Year + "年"+dt.Month + "月" + dt.Day + "日";
+                }
+                return extra;
+            }
+        }
+
+        private string Time
+        {
+            get
+            {
+                string extra="";
+                //TimeSpan span = ;// TimeSpan.Parse(_time);
+                if (DateAndTime.Hour > 18)
+                    extra = "晚上";
+                else if (DateAndTime.Hour > 12)
+                    extra = "下午";
+                else if (DateAndTime.Hour > 6)
+                    extra = "上午";
+                else
+                    extra = "凌晨";
+                return extra+DateAndTime.ToShortTimeString();
             }
         }
 
@@ -111,8 +147,8 @@ namespace ImitateSmartisanNote
                 {
                     _note = value;
                     NotifyPropertyChanged("Note");
-
                     UpdateNoteTitle();
+                    NotifyPropertyChanged("NoteTitle");
                 }
             }
         }
@@ -134,7 +170,9 @@ namespace ImitateSmartisanNote
 
         private string MakeNoteTitle()
         {
-            return this.Note;
+            string note = this.Note.Trim();
+            int index = note.IndexOf('\n');
+            return note.Substring(0, index == -1? note.Length:index);
         }
 
         private void NotifyPropertyChanged(string strPropertyName)

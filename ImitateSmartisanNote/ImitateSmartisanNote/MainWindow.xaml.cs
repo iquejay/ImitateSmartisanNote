@@ -25,22 +25,19 @@ namespace ImitateSmartisanNote
             InitializeComponent();
 
             this.ui_imageTitle.MouseLeftButtonDown += Ui_imageTitle_MouseLeftButtonDown;
-            var noteManager = new NoteManager();
-
-            NotesDataProvider dataProvider = new NotesDataProvider();
-            dataProvider.Init();
-
-            foreach(var item in dataProvider.LoadData())
-            {
-                noteManager.Notes.Add(item);
-            }
-
-            this.DataContext = noteManager;
+            App.MainFrame = MainFrame;
+            this.MainFrame.NavigationUIVisibility = NavigationUIVisibility.Hidden;
+            this.MainFrame.Navigate(new Uri("MainPage.xaml",UriKind.Relative));
         }
 
         private void Ui_imageTitle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void CloseTb_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Close();
         }
     }
 }
